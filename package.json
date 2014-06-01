@@ -1,0 +1,36 @@
+{
+  "name": "mt-validate",
+  "description": "A ui binding simple form validator.",
+  "version": "0.1.1",
+  "author": "noppoMan <yuki@miketokyo.com> (http://miketokyo.com)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/noppoMan/mt-vaidator.git"
+  },
+  "main": "./index.js",
+  "homepage": "http://miketokyo.com",
+  "devDependencies": {
+    "jsdom": "0.10.6",
+    "mocha": "1.20.0",
+    "async": "0.9.0",
+    "should": "4.0.0"
+  },
+  "keywords": [
+    "jQuery validation",
+    "validator",
+    "ui binding"
+  ],
+  "scripts": {
+    "test": "mocha ./spec/spec_runner.js --reporter spec"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.8"
+  },
+  "bugs": {
+    "url": "https://github.com/noppoMan/mt-vaidator/issues"
+  },
+  "directories": {
+    "test": "test"
+  }
+}
