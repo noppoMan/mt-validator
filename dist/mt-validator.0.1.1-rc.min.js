@@ -90,7 +90,7 @@
   };
 
   defaultValidator.range = function(input, options){
-    var range = new Range(options);
+    var range = new Range(options.option);
 
     if(!range.include(input.length)){
       return getMessage('range').replace('{{range}}', range.first() + ' to ' + range.end());
@@ -139,21 +139,32 @@
             }
 
             var rules = $el.attr('validation-rule');
+            var message = $el.attr('validation-message');
 
             if(rules !== undefined && rules !== null){
+
+                var associate = $('[validation-associate='+rules+']');
+
                 var ruleArr = rules.split(',');
                 var skip = contains(ruleArr, 'allowEmpty') && isEmpty($el.val());
 
                 if(!skip){
+
                     ruleArr.forEach(function(r){
                         var rule = r.split('['), option = '';
 
                         if(rule[1]) option = rule[1];
 
                         if(validator[rule[0]]){
-                            var error = validator[rule[0]]($el.val(), option.replace(/]$/, ''));
+
+                            var options = {
+                              option: option.replace(/]$/, ''),
+                              associates: associate.length > 0 ? associate : null
+                            }
+
+                            var error = validator[rule[0]]($el.val(), options)
                             if(error){
-                                $el.before(getErrHtm(error));
+                                $el.before(getErrHtm(message || error));
                             }
                         }
                     });
