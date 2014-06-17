@@ -52,6 +52,23 @@
     };
   }
 
+  function objectEach(obj, fn){
+    for(var i in obj){
+      fn(obj[i], i);
+    }
+  }
+
+  function parseRule(s){
+    var rule = s.split('['), option = '';
+
+    if(rule[1]) option = rule[1];
+
+    return {
+      rule: rule[0],
+      option: option.replace(/]$/, '')
+    }
+  }
+
   /** Utility functions **/
 
   /**
@@ -89,8 +106,8 @@
     return false;
   };
 
-  defaultValidator.range = function(input, options){
-    var range = new Range(options.option);
+  defaultValidator.range = function(input, option){
+    var range = new Range(option);
 
     if(!range.include(input.length)){
       return getMessage('range').replace('{{range}}', range.first() + ' to ' + range.end());
@@ -130,11 +147,13 @@
 
         var validator = extend(defaultValidator, fn);
 
+        var errorList = [];
+
         $form.find('input,select').each(function(){
             var $el = $(this);
             if(isEmpty($el.val())){
                 if($el.attr('required')){
-                    $el.before(getErrHtm(getMessage('required')));
+                  errorList.push({el:$el, content:getErrHtm(getMessage('required'))})
                 }
             }
 
@@ -143,45 +162,59 @@
 
             if(rules !== undefined && rules !== null){
 
-                var associate = $('[validation-associate='+rules+']');
-
                 var ruleArr = rules.split(',');
                 var skip = contains(ruleArr, 'allowEmpty') && isEmpty($el.val());
 
                 if(!skip){
 
-                    ruleArr.forEach(function(r){
-                        var rule = r.split('['), option = '';
-
-                        if(rule[1]) option = rule[1];
-
-                        if(validator[rule[0]]){
-
-                            var options = {
-                              option: option.replace(/]$/, ''),
-                              associates: associate.length > 0 ? associate : null
-                            }
-
-                            var error = validator[rule[0]]($el.val(), options)
-                            if(error){
-                                $el.before(getErrHtm(message || error));
-                            }
-                        }
-                    });
+                  ruleArr.forEach(function(r){
+                    var parserd = parseRule(r);
+                    if(validator[parserd.rule]){
+                      var error = validator[parserd.rule]($el.val(), parserd.option)
+                      if(error){
+                        errorList.push({el:$el, content:getErrHtm(message || error)})
+                      }
+                    }
+                  });
                 }
             }
         });
 
-        var hasError = $('.mt-validator-error').length > 0;
+        if(options.associateRules){
+
+          objectEach(options.associateRules, function(rules, associateName){
+            var $el = $("[validation-associate="+associateName+"]")
+            rules.forEach(function(rule){
+              var parserd = parseRule(rule);
+              var erros = $el.map(function(i, el){
+                return validator[rule]($(el).val(), parserd.option);
+              });
+              if(erros[0]){
+                errorList.push({el:$($el[0]), content:getErrHtm(erros[0])})
+              }
+            });
+
+          });
+        }
+
+        var hasError = errorList.length > 0;
 
         if(!hasError){
             if(typeof options.success == 'function'){
                 options.success();
             }
         }else{
-            if(typeof options.unsuccess == 'function'){
-                options.unsuccess();
-            }
+
+          if(options.beforeShowError){
+            options.beforeShowError(errorList);
+          }
+          errorList.forEach(function(error){ error.el.before(error.content); });
+
+          if(typeof options.unsuccess == 'function'){
+            setTimeout(function(){
+              options.unsuccess(errorList);
+            }, 10);
+          }
         }
 
         return hasError !== false;
