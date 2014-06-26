@@ -15,6 +15,7 @@
   }
 
   settings.errorHtml = '<p class="mt-validator-error" style="color:#ff0000;">{{errorMessage}}</p>';
+  settings.prependError = true;
 
   /** Utility functions **/
 
@@ -116,7 +117,6 @@
     return false;
   };
 
-
   /**
   * void mtValidate
   * @param {object} options
@@ -153,7 +153,7 @@
             var $el = $(this);
             if(isEmpty($el.val())){
                 if($el.attr('required')){
-                  errorList.push({el:$el, content:getErrHtm(getMessage('required'))})
+                  errorList.push({el:$el, content:getMessage('required')})
                 }
             }
 
@@ -172,7 +172,7 @@
                     if(validator[parserd.rule]){
                       var error = validator[parserd.rule]($el.val(), parserd.option)
                       if(error){
-                        errorList.push({el:$el, content:getErrHtm(message || error)})
+                        errorList.push({el:$el, content: message || error})
                       }
                     }
                   });
@@ -190,7 +190,7 @@
                 return validator[rule]($(el).val(), parserd.option);
               });
               if(erros[0]){
-                errorList.push({el:$($el[0]), content:getErrHtm(erros[0])})
+                errorList.push({el:$($el[0]), content:erros[0]})
               }
             });
 
@@ -208,7 +208,11 @@
           if(options.beforeShowError){
             options.beforeShowError(errorList);
           }
-          errorList.forEach(function(error){ error.el.before(error.content); });
+          if(settings.prependError){
+            errorList.forEach(function(error){
+              error.el.before(getErrHtm(error.content));
+            });
+          }
 
           if(typeof options.unsuccess == 'function'){
             setTimeout(function(){
