@@ -16,7 +16,8 @@ npm install mt-validator
 ```
 
 **2. Download source from here.**  
-http://goo.gl/r9wzo9
+http://goo.gl/gfxzo5
+
 
 ## Usage
 
