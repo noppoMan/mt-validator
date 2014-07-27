@@ -9,15 +9,13 @@
 
       $.mtValidator.fn.date = function(input, options){
 
-        console.log(options);
-
         var regexp;
         if(options == 'yyyy/mm/dd'){
             regexp = /[0-9]{4}\/[0-9]{2}\/[0-9]{2}/
         }
 
         if(!input.match(regexp)){
-            return 'Please fill out this filed with ' + options + ' format';
+          return 'Please fill out this filed with ' + options + ' format';
         }
 
         return false;
@@ -30,7 +28,7 @@
             console.log('OK');
           },
           unsuccess: function(){
-
+            
           }
         });
       });

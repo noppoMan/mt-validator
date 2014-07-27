@@ -133,7 +133,7 @@
 
     var $form = $(this);
 
-    if($form.attr('enable-mt-valdator') !== undefined){
+    if($form.attr('enable-mt-validator') !== undefined){
 
         // var asyncErros = options.asyncValidation.map(function(arg){
         //
