@@ -170,6 +170,11 @@ $.mtValidator.settings.errorHtml = '<span class="mt-validator-error hogeclass">{
 ## Hooks
 * beforeShowMessage
 
+## Properties
+|name           |value                           |default    |description    |
+| ------------- |:------------------------------:|--------------:|--------------:|
+|settings.prependError|{Boolean}|true|show error messages automatically or hide them.|
+
 
 ## Run Test
 <pre>
