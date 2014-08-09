@@ -43,26 +43,23 @@ http://goo.gl/gfxzo5
 **validation.js**
 ```javascript
 
-// Get return value.
+//Synchronous usage.
 $('#submit').on('click', function(ev){
   ev.preventDefault(); //if you specified required attributes in element, you need to write this line.
   var hasError = $('#form').mtValidate();
   console.log(hasError);
 });
 
-// Using onSuccess or onUnsuccess callback.
+//Asynchronous usage.
 $('#submit').on('click', function(ev){
-  ev.preventDefault(); //if you specified required attributes in element, you need to write this line.
-
+  ev.preventDefault();
   $('#form').mtValidate({
-    //Will call when throw validation.
+    //When validation errors are nothing.
     success: function(){
-      // write success function here.
-      // ....
+      $('form').submit();
     },
     unsuccess: function(){
-      // write unsuccess function here.
-      // ....
+      window.scrollTo(0, $($('.mt-validator-error').get(0).position().top));
     }
   })
 });
@@ -78,13 +75,12 @@ Specifying `[options]` of surround bracket after rule name, can get it as second
 ```javascript
 $.mtValidator.fn.date = function(input, options){
 
-  var regexp;
-  if(options == 'yyyy/mm/dd'){
-      regexp = /[0-9]{4}\/[0-9]{2}\/[0-9]{2}/
-  }
+  var regexp = (function(){
+    if(options == 'yyyy/mm/dd') return /[0-9]{4}\/[0-9]{2}\/[0-9]{2}/;
+  }());
 
   if(!input.match(regexp)){
-      return 'Please fill out this filed with ' + options + ' format';
+      return 'Invalid format';
   }
 
   return false;
@@ -107,15 +103,59 @@ $.mtValidator.fn.date = function(input, options){
 |range|validation-rule="range[10..100]"|Input length need between n to n|
 |allowEmpty|validation-rule="allowEmpty, range[10..100]"|allow empty charactor. had better combinate with other rules|
 
+
+## Bulk validation for grouping elements (associateRules)
+
+**Add [associateRules] property**
+```javascript
+$('#form').mtValidate({
+  associateRules: {
+    'birth-validate-group': ['required', 'onlyNum'] //Ofcource, can use custome validation rules
+  }
+});
+
+```
+
+**Add [validation-associate] attributes to elements that want to associate**
+```html
+<label for="year">Year</label>
+<select id="year" validation-associate="birthday-validate-group">
+  <option>1930</option>
+  <option>...</option>
+  <option>2014</option>
+</select>
+
+<label for="month">Year</label>
+<select id="month" validation-associate="birthday-validate-group">
+  <option>01</option>
+  <option>...</option>
+  <option>12</option>
+</select>
+
+<label for="day">Year</label>
+<select id="day" validation-associate="birthday-validate-group">
+  <option>01</option>
+  <option>...</option>
+  <option>31</option>
+</select>
+
+```
+
+
 ## Localization or edit default error messages.
 
 You can edit default error messages.  
 In $.mtValidator.settings object, Error message corespond with validation-rule name.
 
-**For exapmle for japanese.**
+**Exapmle for Property Overwriding.**
 ```javascript
 $.mtValidator.settings.messages['required'] = '必須項目です。';
 $.mtValidator.settings.messages['onlyAschii'] = '半角英数字で入力してください。';
+```
+
+**Exapmle for UiBinding Approach**
+```html
+<input type="text" validation-rule="required" validation-message="必須項目です。"/>
 ```
 
 ## Edit error html
@@ -126,6 +166,9 @@ Default is &lt;p class="mt-validator-error" style="color:#ff0000;"&gt;{{errorMes
 ```javascript
 $.mtValidator.settings.errorHtml = '<span class="mt-validator-error hogeclass">{{errorMessage}}</span>'
 ```
+
+## Hooks
+* beforeShowMessage
 
 
 ## Run Test
