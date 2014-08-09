@@ -110,7 +110,7 @@ $.mtValidator.fn.date = function(input, options){
 ```javascript
 $('#form').mtValidate({
   associateRules: {
-    'birth-validate-group': ['required', 'onlyNum'] //Ofcource, can use custome validation rules
+    'birthday-validate-group': ['required', 'onlyNum'] //Ofcource, can use custome validation rules
   }
 });
 
