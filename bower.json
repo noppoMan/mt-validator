@@ -1,0 +1,14 @@
+{
+  "name": "mt-validator",
+  "version": "0.1.1",
+  "main": "index.js",
+  "ignore": [
+    ".gitignore",
+    ".jshintrc",
+    "package.json",
+    "spec/**"
+  ],
+  "dependencies": {
+    "jquery": "latest"
+  }
+}
