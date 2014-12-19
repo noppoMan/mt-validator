@@ -135,16 +135,6 @@
 
     if($form.attr('enable-mt-validator') !== undefined){
 
-        // var asyncErros = options.asyncValidation.map(function(arg){
-        //
-        //     var spt = arg.split(' ');
-        //     var inputSelector = spt[1] , id = spt[0] , command = spt[2];
-        //
-        //     if($(inputSelector)[0] == undefined){
-        //         $('[validation-id="'+id+'"]').before(getErrHtm(getMessage('required')));
-        //     }
-        // });
-
         var validator = extend(defaultValidator, fn);
 
         var errorList = [];
