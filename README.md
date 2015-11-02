@@ -98,10 +98,10 @@ $.mtValidator.fn.date = function(input, options){
 |name           |howto                           |description    |
 | ------------- |:------------------------------:|--------------:|
 |required|validation-rule="required" or required|not permit empty|
-|onlyAscii|validation-rule="onlyAscii"|only ascii charactor|
+|onlyAscii|validation-rule="onlyAscii"|only ascii character|
 |onlyNum|validation-rule="onlyNum"|only number|
 |range|validation-rule="range[10..100]"|Input length need between n to n|
-|allowEmpty|validation-rule="allowEmpty, range[10..100]"|allow empty charactor. had better combinate with other rules|
+|allowEmpty|validation-rule="allowEmpty, range[10..100]"|allow empty character. had better combinate with other rules|
 
 
 ## Bulk validation for grouping elements (associateRules)
